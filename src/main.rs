@@ -305,13 +305,14 @@ fn draw_row_and_return_cursor_position(
     cursor_row: u16,
     stdout: &mut io::Stdout,
 ) -> u16 {
-    execute!(
+    match execute!(
         stdout,
         crossterm::style::Print(content),
         crossterm::cursor::MoveTo(0, cursor_row)
-    );
-
-    cursor_row + 1
+    ) {
+        Ok(_) => cursor_row + 1,
+        Err(e) => panic!("{}", e),
+    }
 }
 
 fn draw_ui(app: &App) -> Result<()> {
